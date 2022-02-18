@@ -2972,7 +2972,7 @@ enum class VmaAllocationRequestType
 
 #ifndef _VMA_FORWARD_DECLARATIONS
 // Opaque handle used by allocation algorithms to identify single allocation in any conforming way.
-VK_DEFINE_NON_DISPATCHABLE_HANDLE(VmaAllocHandle);
+VK_DEFINE_NON_DISPATCHABLE_HANDLE(VmaAllocHandle)
 
 struct VmaMutexLock;
 struct VmaMutexLockRead;
