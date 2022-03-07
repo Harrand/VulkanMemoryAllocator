@@ -6412,7 +6412,7 @@ uint32_t VmaBlockBufferImageGranularity::OffsetToPageIndex(VkDeviceSize offset) 
 void VmaBlockBufferImageGranularity::AllocPage(RegionInfo& page, uint8_t allocType)
 {
     // When current alloc type is free then it can be overriden by new type
-    if (page.allocCount == 0 || page.allocCount > 0 && page.allocType == VMA_SUBALLOCATION_TYPE_FREE)
+    if (page.allocCount == 0 || (page.allocCount > 0 && page.allocType == VMA_SUBALLOCATION_TYPE_FREE))
         page.allocType = allocType;
 
     ++page.allocCount;
@@ -10471,7 +10471,7 @@ public:
     uint32_t GetAlgorithm() const { return m_Algorithm; }
     bool HasExplicitBlockSize() const { return m_ExplicitBlockSize; }
     float GetPriority() const { return m_Priority; }
-    void* const GetAllocationNextPtr() const { return m_pMemoryAllocateNext; }
+    const void* GetAllocationNextPtr() const { return m_pMemoryAllocateNext; }
 
     VkResult CreateMinBlocks();
     void AddPoolStats(VmaPoolStats* pStats);
@@ -13239,11 +13239,11 @@ VmaDefragmentationAlgorithm_Generic::VmaDefragmentationAlgorithm_Generic(
     VmaBlockVector* pBlockVector,
     bool overlappingMoveSupported)
     : VmaDefragmentationAlgorithm(hAllocator, pBlockVector),
+    m_Blocks(VmaStlAllocator<BlockInfo*>(hAllocator->GetAllocationCallbacks())),
     m_AllocationCount(0),
     m_AllAllocations(false),
     m_BytesMoved(0),
-    m_AllocationsMoved(0),
-    m_Blocks(VmaStlAllocator<BlockInfo*>(hAllocator->GetAllocationCallbacks()))
+    m_AllocationsMoved(0)
 {
     // Create block info for each block.
     const size_t blockCount = m_pBlockVector->m_Blocks.size();
